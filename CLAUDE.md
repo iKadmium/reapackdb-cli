@@ -86,6 +86,14 @@ Dev container configured with Rust toolchain (Debian Trixie base).
 - **Start container**: `devcontainer up --workspace-folder .`
 - **All commands run via devcontainer CLI**: `devcontainer exec --workspace-folder . <command>`
 
+## Code Organization
+Keep files small. Split functionality where it makes sense:
+- Each CLI command in `src/commands/` directory, own file per command
+- Shared types and logic in dedicated modules (manifest, reapack DB/INI, etc.)
+- `main.rs` thin - just CLI definition and dispatch
+
+When file grows beyond ~200-300 lines or handles multiple concerns, split it. Better many focused files than few large ones.
+
 ## Build & Test
 Standard Rust workflow via devcontainer:
 - `devcontainer exec --workspace-folder . cargo build` - Build project
