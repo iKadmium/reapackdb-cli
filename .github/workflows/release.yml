@@ -1,9 +1,14 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build (e.g. v0.1.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -49,6 +54,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -78,27 +85,29 @@ jobs:
       - name: Package binary (Unix)
         if: runner.os != 'Windows'
         run: |
+          TAG=${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
           cd target/${{ matrix.target }}/release
-          tar czf ../../../reapackdb-${{ github.ref_name }}-${{ matrix.target }}.tar.gz reapackdb ../../../LICENSE
+          tar czf ../../../reapackdb-${TAG}-${{ matrix.target }}.tar.gz reapackdb ../../../LICENSE
           cd ../../..
-          sha256sum reapackdb-${{ github.ref_name }}-${{ matrix.target }}.tar.gz > reapackdb-${{ github.ref_name }}-${{ matrix.target }}.tar.gz.sha256
+          sha256sum reapackdb-${TAG}-${{ matrix.target }}.tar.gz > reapackdb-${TAG}-${{ matrix.target }}.tar.gz.sha256
 
       - name: Package binary (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          $TAG = "${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
           cd target/${{ matrix.target }}/release
-          Compress-Archive -Path reapackdb.exe,../../../LICENSE -DestinationPath ../../../reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip
+          Compress-Archive -Path reapackdb.exe,../../../LICENSE -DestinationPath ../../../reapackdb-${TAG}-${{ matrix.target }}.zip
           cd ../../..
-          $hash = (Get-FileHash reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip -Algorithm SHA256).Hash.ToLower()
-          "$hash  reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip" | Out-File -FilePath reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip.sha256 -Encoding ASCII -NoNewline
+          $hash = (Get-FileHash reapackdb-${TAG}-${{ matrix.target }}.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  reapackdb-${TAG}-${{ matrix.target }}.zip" | Out-File -FilePath reapackdb-${TAG}-${{ matrix.target }}.zip.sha256 -Encoding ASCII -NoNewline
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
           name: reapackdb-${{ matrix.target }}
           path: |
-            reapackdb-${{ github.ref_name }}-${{ matrix.target }}.*
+            reapackdb-*-${{ matrix.target }}.*
 
   release:
     name: Attach binaries to release
@@ -120,6 +129,7 @@ jobs:
       - name: Attach binaries to release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
           files: |
             artifacts/reapackdb-*
             checksums.txt
