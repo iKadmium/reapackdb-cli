@@ -11,7 +11,7 @@ anyhow = "1.0"
 dirs = "5.0"
 inquire = "0.7"
 ini = { package = "rust-ini", version = "0.21" }
-rusqlite = "0.32"
+rusqlite = "0.39"
 reqwest = { version = "0.12", features = ["blocking"] }
 quick-xml = { version = "0.36", features = ["serialize"] }
 
