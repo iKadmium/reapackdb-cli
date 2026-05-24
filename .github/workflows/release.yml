@@ -61,7 +61,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          ref: ${{ inputs.tag || github.ref }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -91,7 +91,7 @@ jobs:
       - name: Package binary (Unix)
         if: runner.os != 'Windows'
         run: |
-          TAG=${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          TAG=${{ inputs.tag || github.ref_name }}
           cd target/${{ matrix.target }}/release
           tar czf ../../../reapackdb-${TAG}-${{ matrix.target }}.tar.gz reapackdb ../../../LICENSE
           cd ../../..
@@ -101,7 +101,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $TAG = "${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+          $TAG = "${{ inputs.tag || github.ref_name }}"
           cd target/${{ matrix.target }}/release
           Compress-Archive -Path reapackdb.exe,../../../LICENSE -DestinationPath ../../../reapackdb-${TAG}-${{ matrix.target }}.zip
           cd ../../..
@@ -135,7 +135,7 @@ jobs:
       - name: Attach binaries to release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          tag_name: ${{ inputs.tag || github.ref_name }}
           files: |
             artifacts/reapackdb-*
             checksums.txt
