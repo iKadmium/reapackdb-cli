@@ -9,10 +9,10 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 anyhow = "1.0"
 dirs = "6.0"
-inquire = "0.7"
+inquire = "0.9"
 ini = { package = "rust-ini", version = "0.21" }
 rusqlite = "0.39"
-reqwest = { version = "0.12", features = ["blocking"] }
+reqwest = { version = "0.13", features = ["blocking"] }
 quick-xml = { version = "0.40", features = ["serialize"] }
 
 [dev-dependencies]
