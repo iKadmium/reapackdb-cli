@@ -20,8 +20,7 @@ pub fn get_manifest_path(override_path: Option<PathBuf>) -> Result<PathBuf> {
         return Ok(path);
     }
 
-    let config_dir = dirs::config_dir()
-        .context("Failed to get config directory")?;
+    let config_dir = dirs::config_dir().context("Failed to get config directory")?;
 
     Ok(config_dir.join("reapackdb-cli").join("manifest.json"))
 }
@@ -31,26 +30,22 @@ pub fn load_manifest(path: &PathBuf) -> Result<Manifest> {
         return Ok(Manifest { packages: vec![] });
     }
 
-    let content = fs::read_to_string(path)
-        .context("Failed to read manifest file")?;
+    let content = fs::read_to_string(path).context("Failed to read manifest file")?;
 
-    let manifest: Manifest = serde_json::from_str(&content)
-        .context("Failed to parse manifest JSON")?;
+    let manifest: Manifest =
+        serde_json::from_str(&content).context("Failed to parse manifest JSON")?;
 
     Ok(manifest)
 }
 
 pub fn save_manifest(path: &PathBuf, manifest: &Manifest) -> Result<()> {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent)
-            .context("Failed to create manifest directory")?;
+        fs::create_dir_all(parent).context("Failed to create manifest directory")?;
     }
 
-    let content = serde_json::to_string_pretty(manifest)
-        .context("Failed to serialize manifest")?;
+    let content = serde_json::to_string_pretty(manifest).context("Failed to serialize manifest")?;
 
-    fs::write(path, content)
-        .context("Failed to write manifest file")?;
+    fs::write(path, content).context("Failed to write manifest file")?;
 
     Ok(())
 }
@@ -58,7 +53,6 @@ pub fn save_manifest(path: &PathBuf, manifest: &Manifest) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
     use tempfile::TempDir;
 
     #[test]
@@ -76,13 +70,11 @@ mod tests {
         let manifest_path = temp_dir.path().join("manifest.json");
 
         let manifest = Manifest {
-            packages: vec![
-                Package {
-                    remote: "TestRepo".to_string(),
-                    category: "Scripts".to_string(),
-                    package: "TestPackage".to_string(),
-                },
-            ],
+            packages: vec![Package {
+                remote: "TestRepo".to_string(),
+                category: "Scripts".to_string(),
+                package: "TestPackage".to_string(),
+            }],
         };
 
         save_manifest(&manifest_path, &manifest).unwrap();
