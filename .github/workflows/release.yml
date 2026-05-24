@@ -94,7 +94,7 @@ jobs:
           "$hash  reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip" | Out-File -FilePath reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip.sha256 -Encoding ASCII -NoNewline
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: reapackdb-${{ matrix.target }}
           path: |
