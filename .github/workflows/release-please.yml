@@ -20,6 +20,7 @@ jobs:
         id: release
         with:
           release-type: rust
+          draft: true
 
   call-release-workflow:
     needs: release-please
