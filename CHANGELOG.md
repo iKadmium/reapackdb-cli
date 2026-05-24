@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.2...v0.1.3) (2026-05-24)
+
+
+### Bug Fixes
+
+* Trigger release workflow when release-please creates release ([3b7a7e0](https://github.com/iKadmium/reapackdb-cli/commit/3b7a7e03f324eb2a3868aa08f6ead5bf5fcd4771))
+* Use rustls with ring backend and OS certificate store ([#20](https://github.com/iKadmium/reapackdb-cli/issues/20)) ([f9cd214](https://github.com/iKadmium/reapackdb-cli/commit/f9cd214bead15f5ec8249a07723942ddd2c71384))
+
 ## [0.1.2](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.1...v0.1.2) (2026-05-24)
 
 
