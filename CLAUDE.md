@@ -100,6 +100,19 @@ Standard Rust workflow via devcontainer:
 - `devcontainer exec --workspace-folder . cargo test` - Run tests
 - `devcontainer exec --workspace-folder . cargo run -- <args>` - Run CLI with args
 
+## Pull Requests
+- PR titles MUST follow conventional commits format (enforced by CI)
+- Examples: `feat: Add new command`, `fix: Handle edge case`, `chore: Update deps`
+- Title becomes squash commit message when merged to main
+- Use `!` suffix or `BREAKING CHANGE:` footer for breaking changes
+- Allowed types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+
+## Releases
+- Automated via release-please on push to main
+- release-please creates "release PR" with version bump and CHANGELOG
+- Merging release PR triggers tag creation and binary builds
+- Binaries built for 8 platforms matching REAPER targets (Linux x64/x86/ARM64/ARM32, macOS Intel/ARM, Windows x64/x86)
+
 ## License
 GNU Affero General Public License v3 (AGPL-3.0)
 - Network use triggers source disclosure requirement

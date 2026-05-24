@@ -1,0 +1,125 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux targets
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            use_cross: true
+          - os: ubuntu-latest
+            target: i686-unknown-linux-gnu
+            use_cross: true
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            use_cross: true
+          - os: ubuntu-latest
+            target: armv7-unknown-linux-gnueabihf
+            use_cross: true
+
+          # macOS targets
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            use_cross: false
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            use_cross: false
+
+          # Windows targets
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            use_cross: false
+          - os: windows-latest
+            target: i686-pc-windows-msvc
+            use_cross: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install cross
+        if: matrix.use_cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Add target
+        if: ${{ !matrix.use_cross }}
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Build binary
+        run: |
+          if [ "${{ matrix.use_cross }}" = "true" ]; then
+            cross build --release --target ${{ matrix.target }}
+          else
+            cargo build --release --target ${{ matrix.target }}
+          fi
+        shell: bash
+
+      - name: Package binary (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          cd target/${{ matrix.target }}/release
+          tar czf ../../../reapackdb-${{ github.ref_name }}-${{ matrix.target }}.tar.gz reapackdb ../../../LICENSE
+          cd ../../..
+          sha256sum reapackdb-${{ github.ref_name }}-${{ matrix.target }}.tar.gz > reapackdb-${{ github.ref_name }}-${{ matrix.target }}.tar.gz.sha256
+
+      - name: Package binary (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd target/${{ matrix.target }}/release
+          Compress-Archive -Path reapackdb.exe,../../../LICENSE -DestinationPath ../../../reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip
+          cd ../../..
+          $hash = (Get-FileHash reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip" | Out-File -FilePath reapackdb-${{ github.ref_name }}-${{ matrix.target }}.zip.sha256 -Encoding ASCII -NoNewline
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reapackdb-${{ matrix.target }}
+          path: |
+            reapackdb-${{ github.ref_name }}-${{ matrix.target }}.*
+
+  release:
+    name: Attach binaries to release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate checksums file
+        run: |
+          cd artifacts
+          cat *.sha256 > ../checksums.txt
+          cd ..
+
+      - name: Attach binaries to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/reapackdb-*
+            checksums.txt
