@@ -28,8 +28,7 @@ fn parse_remote(data: &str) -> Option<Remote> {
 }
 
 fn get_reaper_config_dir() -> Result<PathBuf> {
-    let config_dir = dirs::config_dir()
-        .context("Could not find system config directory")?;
+    let config_dir = dirs::config_dir().context("Could not find system config directory")?;
     Ok(config_dir.join("REAPER"))
 }
 

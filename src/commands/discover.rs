@@ -1,8 +1,10 @@
+use crate::manifest::{Manifest, Package, load_manifest, save_manifest};
+use crate::reapack::{
+    fetch_index, get_reapack_ini_path, parse_packages_from_index, read_remotes_from_ini,
+};
 use anyhow::{Context, Result};
-use std::path::PathBuf;
 use inquire::MultiSelect;
-use crate::manifest::{load_manifest, save_manifest, Package, Manifest};
-use crate::reapack::{get_reapack_ini_path, read_remotes_from_ini, fetch_index, parse_packages_from_index};
+use std::path::PathBuf;
 
 pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()> {
     let ini_path = get_reapack_ini_path(ini_path)?;
@@ -14,7 +16,8 @@ pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()
     }
 
     // Select remote
-    let remote_names: Vec<String> = remotes.iter()
+    let remote_names: Vec<String> = remotes
+        .iter()
         .map(|r| format!("{} ({})", r.name, r.url))
         .collect();
 
@@ -23,7 +26,8 @@ pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()
         .context("Failed to select remote")?;
 
     // Extract index from selected option
-    let selected_idx = remotes.iter()
+    let selected_idx = remotes
+        .iter()
         .position(|r| format!("{} ({})", r.name, r.url) == selected_remote_idx)
         .context("Failed to find selected remote")?;
 
@@ -43,22 +47,26 @@ pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()
     let manifest = load_manifest(manifest_path)?;
 
     // Build lookup of currently selected packages
-    let currently_in_manifest: Vec<Package> = manifest.packages.iter()
+    let currently_in_manifest: Vec<Package> = manifest
+        .packages
+        .iter()
         .filter(|p| p.remote == remote.name)
         .cloned()
         .collect();
 
     // Build list with default selections
-    let package_list: Vec<String> = packages.iter()
+    let package_list: Vec<String> = packages
+        .iter()
         .map(|(cat, pkg)| format!("{}/{}", cat, pkg))
         .collect();
 
-    let default_indices: Vec<usize> = packages.iter()
+    let default_indices: Vec<usize> = packages
+        .iter()
         .enumerate()
         .filter(|(_, (cat, pkg))| {
-            currently_in_manifest.iter().any(|p|
-                &p.category == cat && &p.package == pkg
-            )
+            currently_in_manifest
+                .iter()
+                .any(|p| &p.category == cat && &p.package == pkg)
         })
         .map(|(i, _)| i)
         .collect();
@@ -82,12 +90,14 @@ pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()
     }
 
     // Calculate changes
-    let additions: Vec<Package> = new_packages_for_remote.iter()
+    let additions: Vec<Package> = new_packages_for_remote
+        .iter()
         .filter(|p| !currently_in_manifest.contains(p))
         .cloned()
         .collect();
 
-    let removals: Vec<Package> = currently_in_manifest.iter()
+    let removals: Vec<Package> = currently_in_manifest
+        .iter()
         .filter(|p| !new_packages_for_remote.contains(p))
         .cloned()
         .collect();
@@ -119,7 +129,9 @@ pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()
 
     // Apply changes
     let mut new_manifest = Manifest {
-        packages: manifest.packages.iter()
+        packages: manifest
+            .packages
+            .iter()
             .filter(|p| p.remote != remote.name)
             .cloned()
             .collect(),
@@ -128,7 +140,11 @@ pub fn discover(manifest_path: &PathBuf, ini_path: Option<PathBuf>) -> Result<()
 
     save_manifest(manifest_path, &new_manifest)?;
 
-    println!("Updated manifest: +{} packages, -{} packages", additions.len(), removals.len());
+    println!(
+        "Updated manifest: +{} packages, -{} packages",
+        additions.len(),
+        removals.len()
+    );
 
     Ok(())
 }

@@ -54,10 +54,18 @@ fn main() -> Result<()> {
     let manifest_path = manifest::get_manifest_path(cli.manifest)?;
 
     match cli.command {
-        Some(Commands::Add { remote, category, package }) => {
+        Some(Commands::Add {
+            remote,
+            category,
+            package,
+        }) => {
             commands::add_package(&manifest_path, remote, category, package)?;
         }
-        Some(Commands::Remove { remote, category, package }) => {
+        Some(Commands::Remove {
+            remote,
+            category,
+            package,
+        }) => {
             commands::remove_package(&manifest_path, remote, category, package)?;
         }
         Some(Commands::Discover { ini }) => {
