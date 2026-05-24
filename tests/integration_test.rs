@@ -1,5 +1,5 @@
-use std::path::PathBuf;
 use std::fs;
+use std::path::PathBuf;
 
 #[test]
 fn test_read_test_data_ini() {
@@ -7,7 +7,10 @@ fn test_read_test_data_ini() {
     assert!(ini_path.exists(), "test-data/reapack.ini should exist");
 
     let content = fs::read_to_string(&ini_path).unwrap();
-    assert!(content.contains("[remotes]"), "INI should have [remotes] section");
+    assert!(
+        content.contains("[remotes]"),
+        "INI should have [remotes] section"
+    );
 }
 
 #[test]
@@ -26,7 +29,10 @@ fn test_read_test_data_xml() {
     // Test parsing one of the XML files
     let first_xml = &xml_files[0];
     let content = fs::read_to_string(first_xml.path()).unwrap();
-    assert!(content.contains("<index"), "XML should be valid ReaPack index");
+    assert!(
+        content.contains("<index"),
+        "XML should be valid ReaPack index"
+    );
     assert!(content.contains("<category"), "XML should have categories");
 }
 
@@ -41,5 +47,8 @@ fn test_reapack_db_exists() {
         .filter_map(|e| e.ok())
         .collect();
 
-    assert!(!entries.is_empty(), "ReaPack directory should contain files");
+    assert!(
+        !entries.is_empty(),
+        "ReaPack directory should contain files"
+    );
 }

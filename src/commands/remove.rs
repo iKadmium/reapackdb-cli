@@ -1,8 +1,13 @@
+use crate::manifest::{Package, load_manifest, save_manifest};
 use anyhow::Result;
 use std::path::PathBuf;
-use crate::manifest::{load_manifest, save_manifest, Package};
 
-pub fn remove_package(manifest_path: &PathBuf, remote: String, category: String, package: String) -> Result<()> {
+pub fn remove_package(
+    manifest_path: &PathBuf,
+    remote: String,
+    category: String,
+    package: String,
+) -> Result<()> {
     let mut manifest = load_manifest(manifest_path)?;
 
     let target = Package {
@@ -15,7 +20,10 @@ pub fn remove_package(manifest_path: &PathBuf, remote: String, category: String,
     manifest.packages.retain(|p| p != &target);
 
     if manifest.packages.len() == original_len {
-        println!("Package not found in manifest: {}/{}/{}", remote, category, package);
+        println!(
+            "Package not found in manifest: {}/{}/{}",
+            remote, category, package
+        );
         return Ok(());
     }
 

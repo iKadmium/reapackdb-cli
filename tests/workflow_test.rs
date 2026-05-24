@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use tempfile::TempDir;
 
 // These tests would require refactoring commands to be testable without user interaction
 // For now, testing the underlying modules
@@ -19,7 +18,8 @@ fn test_parse_real_ini() {
     assert!(section.is_some(), "Should have remotes section");
 
     let section = section.unwrap();
-    let size: usize = section.get("size")
+    let size: usize = section
+        .get("size")
         .and_then(|s| s.parse().ok())
         .unwrap_or(0);
 
@@ -52,8 +52,8 @@ fn test_parse_real_xml_index() {
     let xml_content = fs::read_to_string(xml_files[0].path()).unwrap();
 
     // Test with actual reapack module
-    use quick_xml::events::Event;
     use quick_xml::Reader;
+    use quick_xml::events::Event;
 
     let mut reader = Reader::from_str(&xml_content);
     reader.config_mut().trim_text(true);
@@ -64,13 +64,11 @@ fn test_parse_real_xml_index() {
 
     loop {
         match reader.read_event_into(&mut buf) {
-            Ok(Event::Start(ref e)) => {
-                match e.name().as_ref() {
-                    b"category" => found_category = true,
-                    b"reapack" => found_package = true,
-                    _ => {}
-                }
-            }
+            Ok(Event::Start(ref e)) => match e.name().as_ref() {
+                b"category" => found_category = true,
+                b"reapack" => found_package = true,
+                _ => {}
+            },
             Ok(Event::Eof) => break,
             Err(e) => panic!("Error parsing XML: {:?}", e),
             _ => {}

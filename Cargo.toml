@@ -1,6 +1,6 @@
 [package]
 name = "reapackdb"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2024"
 
 [dependencies]
@@ -8,12 +8,15 @@ clap = { version = "4.5", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 anyhow = "1.0"
-dirs = "5.0"
-inquire = "0.7"
+dirs = "6.0"
+inquire = "0.9"
 ini = { package = "rust-ini", version = "0.21" }
-rusqlite = "0.32"
-reqwest = { version = "0.12", features = ["blocking"] }
-quick-xml = { version = "0.36", features = ["serialize"] }
+rusqlite = { version = "0.39", features = ["bundled"] }
+reqwest = { version = "0.13", features = ["blocking", "rustls-no-provider"], default-features = false }
+rustls = { version = "0.23", features = ["ring"], default-features = false }
+# Explicitly depend on ring to ensure it's selected as crypto provider
+ring = "0.17"
+quick-xml = { version = "0.40", features = ["serialize"] }
 
 [dev-dependencies]
 tempfile = "3.13"
