@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.3...v0.1.4) (2026-05-24)
+
+
+### Bug Fixes
+
+* Call release workflow directly from release-please ([#21](https://github.com/iKadmium/reapackdb-cli/issues/21)) ([67e3ca2](https://github.com/iKadmium/reapackdb-cli/commit/67e3ca2ce3d5b8af744ba2cc31452b82a5a70b9d))
+* Exclude aws-lc-rs to avoid GCC memcmp bug ([#23](https://github.com/iKadmium/reapackdb-cli/issues/23)) ([8d3efbe](https://github.com/iKadmium/reapackdb-cli/commit/8d3efbe54c1030de3fbe1d0b1978e6a0695432c0))
+
 ## [0.1.3](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.2...v0.1.3) (2026-05-24)
 
 
