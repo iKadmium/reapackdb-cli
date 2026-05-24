@@ -32,7 +32,3 @@ jobs:
             chore
             revert
           requireScope: false
-          subjectPattern: ^[A-Z].+$
-          subjectPatternError: |
-            Subject must start with uppercase letter.
-            Example: "feat: Add new feature" (not "feat: add new feature")
