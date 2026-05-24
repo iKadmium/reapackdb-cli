@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.1...v0.1.2) (2026-05-24)
+
+
+### Bug Fixes
+
+* Vendor OpenSSL for cross-platform builds ([#17](https://github.com/iKadmium/reapackdb-cli/issues/17)) ([63e0ac9](https://github.com/iKadmium/reapackdb-cli/commit/63e0ac91606b33a76413657bf13dca2a5cac3a83))
+
 ## [0.1.1](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.0...v0.1.1) (2026-05-24)
 
 
