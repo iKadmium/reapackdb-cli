@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/iKadmium/reapackdb-cli/compare/v0.1.0...v0.1.1) (2026-05-24)
+
+
+### Bug Fixes
+
+* Use native-tls and bundled SQLite for cross-platform builds ([#15](https://github.com/iKadmium/reapackdb-cli/issues/15)) ([48f3fbb](https://github.com/iKadmium/reapackdb-cli/commit/48f3fbbe0961794c87c049d47437faff1d034ffe))
+
 ## 0.1.0 (2026-05-24)
 
 
