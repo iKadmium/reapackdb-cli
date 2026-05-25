@@ -1,6 +1,7 @@
 {
   "release-type": "rust",
   "draft": true,
+  "force-tag-creation": true,
   "packages": {
     ".": {}
   }
