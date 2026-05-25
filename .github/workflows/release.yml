@@ -9,11 +9,19 @@ on:
         description: 'Tag to build (e.g. v0.1.0)'
         required: true
         type: string
+      ref:
+        description: 'Git ref to checkout (commit SHA or tag)'
+        required: false
+        type: string
   workflow_call:
     inputs:
       tag:
         description: 'Tag to build (e.g. v0.1.0)'
         required: true
+        type: string
+      ref:
+        description: 'Git ref to checkout (commit SHA or tag)'
+        required: false
         type: string
 
 permissions:
@@ -61,7 +69,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ inputs.ref || inputs.tag || github.ref }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
