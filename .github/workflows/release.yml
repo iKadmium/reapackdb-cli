@@ -146,3 +146,4 @@ jobs:
         run: |
           TAG=${{ inputs.tag || github.ref_name }}
           gh release upload "$TAG" artifacts/reapackdb-* checksums.txt --repo ${{ github.repository }}
+          gh release edit "$TAG" --draft=false --repo ${{ github.repository }}
