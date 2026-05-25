@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/iKadmium/reapackdb-cli/compare/reapackdb-v0.2.0...reapackdb-v0.2.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* Force tag creation for draft releases ([#43](https://github.com/iKadmium/reapackdb-cli/issues/43)) ([ba66cf6](https://github.com/iKadmium/reapackdb-cli/commit/ba66cf67e23fab0274ef3f4c7a008741ba4914d4))
+
 ## [0.2.0](https://github.com/iKadmium/reapackdb-cli/compare/reapackdb-v0.1.0...reapackdb-v0.2.0) (2026-05-25)
 
 
