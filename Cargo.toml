@@ -19,7 +19,7 @@ reqwest = { version = "0.13", features = [
 rustls = { version = "0.23", features = ["ring"], default-features = false }
 # Explicitly depend on ring to ensure it's selected as crypto provider
 ring = "0.17"
-quick-xml = { version = "0.40", features = ["serialize"] }
+quick-xml = { version = "0.41", features = ["serialize"] }
 
 [dev-dependencies]
 tempfile = "3.13"
